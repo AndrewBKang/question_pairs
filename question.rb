@@ -24,6 +24,10 @@ class Question < Model
     QuestionFollower.most_followed_questions(n)
   end
 
+  def self.most_liked(n)
+    QuestionLike.most_liked_questions(n)
+  end
+
   def author
     query = <<-SQL
       SELECT users.id, users.fname, users.lname

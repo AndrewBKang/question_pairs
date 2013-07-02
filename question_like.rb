@@ -38,4 +38,17 @@ class QuestionLike
 
     self.run_query(Question, query, user_id)
   end
+
+  def self.most_liked_questions(n)
+    query = <<-SQL
+      SELECT questions.id, questions.title, questions.body, questions.author_id
+      FROM questions
+      JOIN question_likes ON questions.id = question_likes.question_id
+      GROUP BY questions.id
+      ORDER BY COUNT(question_likes.question_id) DESC
+    SQL
+
+    QuestionsDatabase.instance.execute(query).
+    map { |hash| Question.new(hash) }[0..n-1]
+  end
 end
