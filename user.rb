@@ -2,11 +2,7 @@ require_relative 'questions_database'
 
 class User
 
-  attr_accessor :id
-
-  def self.db
-    QuestionsDatabase.instance
-  end
+  attr_reader :id
 
   def self.find_by_name(fname, lname)
     query = <<-SQL
@@ -15,21 +11,15 @@ class User
       WHERE users.fname = ?
       AND users.lname = ?
     SQL
-    self.new(self.db.execute(query,fname,lname).first["id"])
+    self.new(QuestionsDatabase.instance.execute(query,fname,lname).first["id"])
   end
 
   def initialize(id)
-    self.id = id
+    @id = id
   end
 
   def authored_questions
-    query = <<-SQL
-      SELECT id
-      FROM questions
-      WHERE questions.author_id = ?
-    SQL
-
-    self.class.db.execute(query, id).map { |hash| hash.values}.flatten
+    Question.find_by_author_id(@id)
   end
 
   def authored_replies
