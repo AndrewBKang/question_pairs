@@ -32,4 +32,8 @@ class User < Model
 
     self.class.run_query(Reply, query, id)
   end
+
+  def followed_questions
+    QuestionFollower.followed_questions_for_user_id(id)
+  end
 end

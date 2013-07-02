@@ -38,4 +38,8 @@ class Question < Model
 
     self.class.run_query(Reply,query,id)
   end
+
+  def followers
+    QuestionFollower.followers_for_question_id(id)
+  end
 end
