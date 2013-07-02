@@ -41,4 +41,18 @@ class User < Model
   def liked_questions
     QuestionLike.liked_questions_for_user_id(id)
   end
+
+  def average_karma
+    query = <<-SQL
+      SELECT AVG(likes) AS average
+      FROM (SELECT COUNT(*) AS likes
+            FROM users
+            JOIN questions ON users.id = questions.author_id
+            JOIN question_likes ON questions.id = question_likes.question_id
+            WHERE users.id = ?
+            GROUP BY questions.id)
+    SQL
+
+    QuestionsDatabase.instance.execute(query,id).first["average"]
+  end
 end
