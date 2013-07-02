@@ -11,7 +11,7 @@ class Question
       WHERE questions.author_id = ?
     SQL
     QuestionsDatabase.instance.execute(query,id).
-    map { |hash| self.new(hash.values.first) }
+    map { |hash| self.new(hash["id"]) }
   end
 
   def initialize(id)
@@ -28,5 +28,16 @@ class Question
     User.new(
       QuestionsDatabase.instance.
       execute(query, @id).first["author_id"])
+  end
+
+  def replies
+    query = <<-SQL
+      SELECT id
+      FROM replies
+      WHERE replies.question_id = ?
+    SQL
+
+    QuestionsDatabase.instance.execute(query, @id).
+    map{ |hash| Reply.new(hash["id"]) }
   end
 end
