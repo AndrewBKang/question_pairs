@@ -1,3 +1,5 @@
+--  cat import_db.sql | sqlite3 questions.db
+
 CREATE TABLE users (
 
   id INTEGER PRIMARY KEY,
