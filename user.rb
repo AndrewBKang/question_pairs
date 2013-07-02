@@ -31,4 +31,14 @@ class User
 
     self.class.db.execute(query, id).map { |hash| hash.values}.flatten
   end
+
+  def authored_replies
+    query = <<-SQL
+      SELECT id
+      FROM replies
+      WHERE replies.author_id = ?
+    SQL
+
+    self.class.db.execute(query, id).map { |hash| hash.values}.flatten
+  end
 end
