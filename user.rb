@@ -3,6 +3,7 @@ require_relative 'model'
 require_relative 'sql_helper'
 require_relative 'question'
 require_relative 'reply'
+require_relative 'question_like'
 
 class User < Model
   extend SQLHelper
@@ -35,5 +36,9 @@ class User < Model
 
   def followed_questions
     QuestionFollower.followed_questions_for_user_id(id)
+  end
+
+  def liked_questions
+    QuestionLike.liked_questions_for_user_id(id)
   end
 end
