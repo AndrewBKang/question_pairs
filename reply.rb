@@ -63,5 +63,16 @@ class Reply
     parent_id.nil? ? nil : self.new(parent_id)
   end
 
+  def child_replies
+    query = <<-SQL
+      SELECT id
+      FROM replies
+      WHERE replies.parent_id = ?
+    SQL
+
+    QuestionsDatabase.instance.execute(query, @id).
+    map{ |hash| self.new(hash["id"]) }
+  end
+
 
 end
