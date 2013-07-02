@@ -43,11 +43,25 @@ CREATE TABLE question_likes(
   FOREIGN KEY(user_id) REFERENCES users(id)
   );
 
+CREATE TABLE tags(
+  id INTEGER PRIMARY KEY,
+  name VARCHAR(255) -- CHECK (name IN ('html', 'css', 'ruby', 'javascript')),
+  );
+
+CREATE TABLE question_tags(
+  id INTEGER PRIMARY KEY,
+  question_id INTEGER NOT NULL,
+  tag_id INTEGER NOT NULL,
+  FOREIGN KEY(question_id) REFERENCES questions(id),
+  FOREIGN KEY(tag_id) REFERENCES tags(id)
+  );
+
 INSERT INTO users (fname,lname)
   VALUES ('a','kang'),('s','unni'),('s','omebody');
 
 INSERT INTO questions (title, body, author_id)
-  VALUES  ('qtitle','firstquestion',3),('qtitle2','secondquestion',3);
+  VALUES  ('qtitle','firstquestion',3),('qtitle2','secondquestion',3),
+          ('qtitle3','thirdquestion',2);
 
 INSERT INTO question_followers (question_id, follower_id)
   VALUES (1,1), (1,2), (2,1), (2,2), (1,3);
@@ -58,3 +72,8 @@ INSERT INTO replies (reply,question_id,parent_id,author_id)
 INSERT INTO question_likes (question_id,user_id)
   VALUES (1,1), (1,2), (1,3), (2,3);
 
+INSERT INTO tags (name)
+  VALUES ('html'), ('css'), ('ruby'), ('javascript');
+
+INSERT INTO question_tags (question_id, tag_id)
+  VALUES (1,1), (2,1), (3,1);
