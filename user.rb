@@ -12,13 +12,23 @@ class User
     query = <<-SQL
       SELECT id
       FROM users
-      WHERE users.fname = fname
-      AND users.lname = lname
+      WHERE users.fname = ?
+      AND users.lname = ?
     SQL
-    self.db.execute(query).first["id"]
+    self.new(self.db.execute(query,fname,lname).first["id"])
   end
 
-  def initialize(fname, lname)
-    id
+  def initialize(id)
+    self.id = id
+  end
+
+  def authored_questions
+    query = <<-SQL
+      SELECT id
+      FROM questions
+      WHERE questions.author_id = ?
+    SQL
+
+    self.class.db.execute(query, id).map { |hash| hash.values}.flatten
   end
 end
