@@ -8,7 +8,7 @@ require_relative 'question_like'
 class User < Model
   extend SQLHelper
 
-  attr_reader :fname, :lname
+  attr_accessor :fname, :lname
 
   def self.find_by_name(fname, lname)
     query = <<-SQL
@@ -54,5 +54,9 @@ class User < Model
     SQL
 
     QuestionsDatabase.instance.execute(query,id).first["average"]
+  end
+
+  def save
+    super({:fname => fname, :lname => lname})
   end
 end

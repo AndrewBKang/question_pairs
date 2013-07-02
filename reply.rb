@@ -5,7 +5,7 @@ require_relative 'sql_helper'
 class Reply < Model
   extend SQLHelper
 
-  attr_reader :reply, :question_id, :parent_id, :author_id
+  attr_accessor :reply, :question_id, :parent_id, :author_id
 
   def self.find_by_question_id(id)
     query = <<-SQL
@@ -72,5 +72,8 @@ class Reply < Model
     self.class.run_query(self.class, query, id)
   end
 
-
+  def save
+    super({:reply => reply, :question_id => question_id,
+      :parent_id => parent_id, :author_id => author_id})
+  end
 end

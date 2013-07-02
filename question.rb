@@ -8,7 +8,7 @@ require_relative 'question_like'
 class Question < Model
   extend SQLHelper
 
-  attr_reader :title, :body, :author_id
+  attr_accessor :title, :body, :author_id
 
   def self.find_by_author_id(id)
     query = <<-SQL
@@ -59,5 +59,9 @@ class Question < Model
 
   def num_likers
     QuestionLike.num_likes_for_question_id(id)
+  end
+
+  def save
+    super({:title => title, :body => body, :author_id => author_id})
   end
 end
