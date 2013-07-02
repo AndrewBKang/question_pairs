@@ -1,10 +1,8 @@
 require_relative 'questions_database'
 require_relative 'model'
-require_relative 'sql_helper'
+
 
 class Reply < Model
-  extend SQLHelper
-
   attr_accessor :reply, :question_id, :parent_id, :author_id
 
   def self.find_by_question_id(id)

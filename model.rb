@@ -1,9 +1,23 @@
+require_relative 'sql_helper'
+
 class Model
+  extend SQLHelper
+
   attr_reader :id
 
   CLASS_TO_STR = {"User"     => "users",
                   "Question" => "questions",
                   "Reply"    => "replies"}
+
+  def self.find_by_id(id)
+    query = <<-SQL
+      SELECT *
+      FROM #{CLASS_TO_STR[self.name]}
+      WHERE #{CLASS_TO_STR[self.name]}.id = ?
+    SQL
+
+    self.run_query(self, query, id).first
+  end
 
   def initialize(attributes)
     attributes.each { |key, value| instance_variable_set("@#{key}", value) }
@@ -20,6 +34,7 @@ class Model
     end
 
     QuestionsDatabase.instance.execute(query, params)
+    @id = QuestionsDatabase.instance.last_insert_row_id if id.nil?
   end
 
   def insert(hash)

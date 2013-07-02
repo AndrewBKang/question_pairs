@@ -1,13 +1,10 @@
 require_relative 'questions_database'
 require_relative 'model'
-require_relative 'sql_helper'
 require_relative 'question'
 require_relative 'reply'
 require_relative 'question_like'
 
 class User < Model
-  extend SQLHelper
-
   attr_accessor :fname, :lname
 
   def self.find_by_name(fname, lname)
