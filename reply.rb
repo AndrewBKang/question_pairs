@@ -1,7 +1,11 @@
 require_relative 'questions_database'
 require_relative 'model'
+require_relative 'sql_helper'
 
 class Reply < Model
+  extend SQLHelper
+
+  attr_reader :reply, :question_id, :parent_id, :author_id
 
   def self.find_by_question_id(id)
     query = <<-SQL
@@ -9,8 +13,8 @@ class Reply < Model
       FROM replies
       WHERE replies.question_id = ?
     SQL
-    QuestionsDatabase.instance.execute(query,id).
-    map { |hash| self.new(hash) }
+
+    self.run_query(self, query, id)
   end
 
   def self.find_by_user_id(id)
@@ -19,9 +23,8 @@ class Reply < Model
       FROM replies
       WHERE replies.author_id = ?
     SQL
-    QuestionsDatabase.instance.execute(query,id).
-    map { |hash| self.new(hash) }
 
+    self.run_query(self, query, id)
   end
 
   def author
@@ -32,9 +35,7 @@ class Reply < Model
       WHERE replies.id = ?
     SQL
 
-    User.new(
-      QuestionsDatabase.instance.
-      execute(query, @id).first)
+    self.class.run_query(User, query, id).first
   end
 
   def question
@@ -45,8 +46,7 @@ class Reply < Model
       WHERE replies.id = ?
     SQL
 
-    QuestionsDatabase.instance.execute(query, @id).
-    map{ |hash| Question.new(hash) }
+    self.class.run_query(Question, query, id)
   end
 
   def parent_reply
@@ -59,7 +59,7 @@ class Reply < Model
     hash = QuestionsDatabase.instance.
       execute(query, @id).first
 
-    hash["parent_id"].nil? ? nil : self.new(hash)
+    hash["parent_id"].nil? ? nil : self.class.new(hash)
   end
 
   def child_replies
@@ -69,8 +69,7 @@ class Reply < Model
       WHERE replies.parent_id = ?
     SQL
 
-    QuestionsDatabase.instance.execute(query, @id).
-    map{ |hash| self.new(hash) }
+    self.class.run_query(self.class, query, id)
   end
 
 

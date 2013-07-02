@@ -1,10 +1,12 @@
 require_relative 'questions_database'
-require_relative 'user'
 require_relative 'model'
+require_relative 'sql_helper'
+require_relative 'user'
 
 class Question < Model
+  extend SQLHelper
 
-  attr_reader :id
+  attr_reader :title, :body, :author_id
 
   def self.find_by_author_id(id)
     query = <<-SQL
@@ -12,8 +14,8 @@ class Question < Model
       FROM questions
       WHERE questions.author_id = ?
     SQL
-    QuestionsDatabase.instance.execute(query,id).
-    map { |hash| self.new(hash) }
+
+    self.run_query(self,query,id)
   end
 
   def author
@@ -24,7 +26,7 @@ class Question < Model
       WHERE questions.id = ?
     SQL
 
-    User.new(QuestionsDatabase.instance.execute(query, @id).first)
+    self.class.run_query(User,query,id).first
   end
 
   def replies
@@ -34,7 +36,6 @@ class Question < Model
       WHERE replies.question_id = ?
     SQL
 
-    QuestionsDatabase.instance.execute(query, @id).
-    map{ |hash| Reply.new(hash) }
+    self.class.run_query(Reply,query,id)
   end
 end
