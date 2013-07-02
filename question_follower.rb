@@ -1,3 +1,4 @@
+require_relative 'questions_database'
 require_relative 'sql_helper'
 require_relative 'user'
 require_relative 'question'
@@ -26,4 +27,18 @@ class QuestionFollower
 
     self.run_query(Question,query,id)
   end
+
+  def self.most_followed_questions(n)
+    query = <<-SQL
+      SELECT questions.id, questions.title, questions.body, questions.author_id
+      FROM questions
+      JOIN question_followers ON questions.id = question_followers.question_id
+      GROUP BY questions.id
+      ORDER BY COUNT(question_followers.question_id) DESC
+    SQL
+
+    QuestionsDatabase.instance.execute(query).
+    map { |hash| Question.new(hash) }[0..n-1]
+  end
+
 end

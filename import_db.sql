@@ -48,7 +48,7 @@ INSERT INTO questions (title, body, author_id)
   VALUES  ('qtitle','firstquestion',3),('qtitle2','secondquestion',3);
 
 INSERT INTO question_followers (question_id, follower_id)
-  VALUES (1,1), (1,2), (2,1), (2,2);
+  VALUES (1,1), (1,2), (2,1), (2,2), (1,3);
 
 INSERT INTO replies (reply,question_id,parent_id,author_id)
   VALUES ('reply1',1,NULL,1), ('reply2',1,1,2), ('reply3',1,2,1);
