@@ -26,9 +26,9 @@ CREATE TABLE replies (
   id INTEGER PRIMARY KEY,
   reply VARCHAR(255) NOT NULL,
   question_id INTEGER NOT NULL,
-  reply_id INTEGER,
+  parent_id INTEGER,
   author_id INTEGER NOT NULL,
-  FOREIGN KEY(reply_id) REFERENCES replies(id),
+  FOREIGN KEY(parent_id) REFERENCES replies(id),
   FOREIGN KEY(question_id) REFERENCES questions(id),
   FOREIGN KEY(author_id) references users(id)
   );
@@ -50,7 +50,7 @@ INSERT INTO questions (title, body, author_id)
 INSERT INTO question_followers (question_id, follower_id)
   VALUES (1,1), (1,2), (2,1), (2,2);
 
-INSERT INTO replies (reply,question_id,reply_id,author_id)
+INSERT INTO replies (reply,question_id,parent_id,author_id)
   VALUES ('reply1',1,NULL,1), ('reply2',1,1,2), ('reply3',1,2,1);
 
 INSERT INTO question_likes (question_id,user_id)
