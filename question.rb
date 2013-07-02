@@ -17,4 +17,16 @@ class Question
   def initialize(id)
     @id = id
   end
+
+  def author
+    query = <<-SQL
+      SELECT author_id
+      FROM questions
+      WHERE questions.id = ?
+    SQL
+
+    User.new(
+      QuestionsDatabase.instance.
+      execute(query, @id).first["author_id"])
+  end
 end
