@@ -2,6 +2,7 @@ require_relative 'questions_database'
 require_relative 'model'
 require_relative 'sql_helper'
 require_relative 'user'
+require_relative 'question_follower'
 
 class Question < Model
   extend SQLHelper
@@ -16,6 +17,10 @@ class Question < Model
     SQL
 
     self.run_query(self,query,id)
+  end
+
+  def self.most_followed(n)
+    QuestionFollower.most_followed_questions(n)
   end
 
   def author
